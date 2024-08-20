@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:bestlab/pages/cpu_usage_chart.dart';
 import 'package:bestlab/pages/device_list_page.dart';
+import 'package:bestlab/pages/device_list_screen.dart';
 import 'package:bestlab/pages/system_list_page.dart';
 import 'package:bestlab/pages/user_setting_page.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: CpuUsageChart(),
+      home: DeviceListScreen(),
     );
   }
 }
