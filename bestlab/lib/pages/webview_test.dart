@@ -96,38 +96,48 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'Selected From DateTime:',
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 10),
-            Text(
-              _selectedFromDateTime,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => _selectFromDateTime(context),
-              child: Text('Pick From Date & Time'),
-            ),
-            SizedBox(height: 20),
-            Text(
-              'Selected To DateTime:',
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 10),
-            Text(
-              _selectedToDateTime,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'From:',
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(width: 10),
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () => _selectFromDateTime(context),
+                ),
+                SizedBox(width: 10),
+                Text(
+                  _selectedFromDateTime,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => _selectToDateTime(context),
-              child: Text('Pick To Date & Time'),
-            ),
-            ElevatedButton(
-              onPressed: _selectNow,
-              child: Text('Set To Now'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'To:',
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(width: 10),
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () => _selectToDateTime(context),
+                ),
+                IconButton(
+                  icon: Icon(Icons.access_time),
+                  onPressed: _selectNow,
+                ),
+                SizedBox(width: 10),
+                Text(
+                  _selectedToDateTime,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
           ],
         ),

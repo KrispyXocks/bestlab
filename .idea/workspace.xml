@@ -5,14 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="357e8939-2747-4a1e-8774-dfb76fa085ff" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/bestlab/lib/pages/webview_test.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bestlab/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/bestlab/android/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bestlab/android/app/src/main/res/xml/network_security_config.xml" beforeDir="false" afterPath="$PROJECT_DIR$/bestlab/android/app/src/main/res/xml/network_security_config.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bestlab/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/bestlab/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bestlab/lib/pages/webview_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/bestlab/lib/pages/webview_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bestlab/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/bestlab/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bestlab/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/bestlab/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bestlab/lib/pages/webview_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/bestlab/lib/pages/webview_test.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
