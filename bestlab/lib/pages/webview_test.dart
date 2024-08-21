@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class DateTimeRangePickerExample extends StatefulWidget {
   @override
@@ -92,55 +93,69 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
       appBar: AppBar(
         title: Text('DateTime Range Picker Example'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'From:',
-                  style: TextStyle(fontSize: 18),
+      body: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'From:',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(width: 10),
+                    IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: () => _selectFromDateTime(context),
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      _selectedFromDateTime,
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
-                SizedBox(width: 10),
-                IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () => _selectFromDateTime(context),
-                ),
-                SizedBox(width: 10),
-                Text(
-                  _selectedFromDateTime,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'To:',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    SizedBox(width: 10),
+                    IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: () => _selectToDateTime(context),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.access_time),
+                      onPressed: _selectNow,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      _selectedToDateTime,
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
               ],
             ),
-            SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'To:',
-                  style: TextStyle(fontSize: 18),
-                ),
-                SizedBox(width: 10),
-                IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () => _selectToDateTime(context),
-                ),
-                IconButton(
-                  icon: Icon(Icons.access_time),
-                  onPressed: _selectNow,
-                ),
-                SizedBox(width: 10),
-                Text(
-                  _selectedToDateTime,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-              ],
+          ),
+          Expanded(
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.95,
+              height: MediaQuery.of(context).size.height * 0.5,
+              child: WebView(
+                initialUrl: 'https://flutter.dev', // Thay đổi URL này theo nhu cầu
+                javascriptMode: JavascriptMode.unrestricted,
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
