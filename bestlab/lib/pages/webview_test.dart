@@ -22,6 +22,26 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
   DateTime? selectedDate = DateTime.now();
   TimeOfDay? selectedTime = TimeOfDay.now();
 
+  @override
+  @override
+  void initState() {
+    super.initState();
+
+    // Sử dụng addPostFrameCallback để đảm bảo WebViewController đã sẵn sàng
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (_webViewController != null) {
+        // Đảm bảo WebViewController đã sẵn sàng
+        await _webViewController.loadUrl(Uri.dataFromString('''
+        <html>
+          <body style="margin:0;padding:0;">
+            <iframe src="$_baseUrl" style="border:none;" width="100%" height="50%"></iframe>
+          </body>
+        </html>
+      ''', mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString());
+      }
+    });
+  }
+
   Future<void> _selectFromDateTime(BuildContext context) async {
     await showDialog(
       context: context,
@@ -256,12 +276,11 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
     _webViewController.loadUrl(Uri.dataFromString(iframeHtml, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString());
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('DateTime Range Picker Example'),
+        title: Text('device 1'),
       ),
       body: Column(
         children: <Widget>[
@@ -330,7 +349,18 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
                 javascriptMode: JavascriptMode.unrestricted,
                 onWebViewCreated: (WebViewController webViewController) {
                   _webViewController = webViewController;
-                },
+
+                  // Tải nội dung ngay khi WebView được khởi tạo
+                  _webViewController.loadUrl(Uri.dataFromString('''
+                  <html>
+                    <body style="margin:0;padding:0;">
+                      <iframe src="$_baseUrl" style="border:none;" width="100%" height="50%"></iframe>
+                    </body>
+                  </html>
+  ''', mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString());
+    },
+
+
               ),
             ),
           ),

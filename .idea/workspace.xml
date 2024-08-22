@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="357e8939-2747-4a1e-8774-dfb76fa085ff" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bestlab/lib/pages/webview_test.dart" beforeDir="false" afterPath="$PROJECT_DIR$/bestlab/lib/pages/webview_test.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
