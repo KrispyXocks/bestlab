@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:numberpicker/numberpicker.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class DateTimeRangePickerExample extends StatefulWidget {
@@ -16,8 +14,8 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
   String _baseUrl = "http://10.0.2.2:3000/d-solo/TXSTREZ/simple-streaming-example?orgId=1&panelId=5";
   late WebViewController _webViewController;
 
-  final String _defaultFromDateTime = "2024-01-01T00:00:00Z"; // Giá trị mặc định cho "from"
-  final String _defaultToDateTime = "now"; // Giá trị mặc định cho "to"
+  final TextEditingController _hourController = TextEditingController();
+  final TextEditingController _minuteController = TextEditingController();
 
   DateTime? selectedDate = DateTime.now();
   TimeOfDay? selectedTime = TimeOfDay.now();
@@ -25,15 +23,12 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
   @override
   void initState() {
     super.initState();
-
-    // Sử dụng addPostFrameCallback để đảm bảo WebViewController đã sẵn sàng
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (_webViewController != null) {
-        // Đảm bảo WebViewController đã sẵn sàng
         await _webViewController.loadUrl(Uri.dataFromString('''
         <html>
           <body style="margin:0;padding:0;">
-            <iframe src="$_baseUrl" style="border:none;" width="100%" height="50%"></iframe>
+            <iframe src="$_baseUrl" style="border:none;" width="100%" height="100%"></iframe>
           </body>
         </html>
       ''', mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString());
@@ -58,10 +53,9 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
                   ],
                 ),
                 Container(
-                  height: 300, // Chiều cao của TabBarView
+                  height: 300,
                   child: TabBarView(
                     children: [
-                      // Tab Date Picker
                       Center(
                         child: SizedBox(
                           height: 250,
@@ -75,11 +69,10 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
                           ),
                         ),
                       ),
-                      // Tab Time Picker Custom
                       Center(
                         child: SizedBox(
                           height: 250,
-                          child: _buildCustomTimePicker(),
+                          child: _buildTimePickerInput(),
                         ),
                       ),
                     ],
@@ -96,13 +89,13 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
                     ),
                     TextButton(
                       onPressed: () {
-                        if (selectedDate != null && selectedTime != null) {
+                        if (selectedDate != null && _hourController.text.isNotEmpty && _minuteController.text.isNotEmpty) {
                           final DateTime fullDateTime = DateTime(
                             selectedDate!.year,
                             selectedDate!.month,
                             selectedDate!.day,
-                            selectedTime!.hour,
-                            selectedTime!.minute,
+                            int.parse(_hourController.text),
+                            int.parse(_minuteController.text),
                           );
                           String formattedDate = DateFormat("yyyy-MM-ddTHH:mm:ss").format(fullDateTime);
                           formattedDate = "${formattedDate}Z";
@@ -142,10 +135,9 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
                   ],
                 ),
                 Container(
-                  height: 300, // Chiều cao của TabBarView
+                  height: 300,
                   child: TabBarView(
                     children: [
-                      // Tab Date Picker
                       Center(
                         child: SizedBox(
                           height: 250,
@@ -159,11 +151,10 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
                           ),
                         ),
                       ),
-                      // Tab Time Picker Custom
                       Center(
                         child: SizedBox(
                           height: 250,
-                          child: _buildCustomTimePicker(),
+                          child: _buildTimePickerInput(),
                         ),
                       ),
                     ],
@@ -180,13 +171,13 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
                     ),
                     TextButton(
                       onPressed: () {
-                        if (selectedDate != null && selectedTime != null) {
+                        if (selectedDate != null && _hourController.text.isNotEmpty && _minuteController.text.isNotEmpty) {
                           final DateTime fullDateTime = DateTime(
                             selectedDate!.year,
                             selectedDate!.month,
                             selectedDate!.day,
-                            selectedTime!.hour,
-                            selectedTime!.minute,
+                            int.parse(_hourController.text),
+                            int.parse(_minuteController.text),
                           );
                           String formattedDate = DateFormat("yyyy-MM-ddTHH:mm:ss").format(fullDateTime);
                           formattedDate = "${formattedDate}Z";
@@ -209,41 +200,56 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
     );
   }
 
-  Widget _buildCustomTimePicker() {
+  Widget _buildTimePickerInput() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        NumberPicker(
-          value: selectedTime!.hour,
-          minValue: 0,
-          maxValue: 23,
-          onChanged: (value) {
-            setState(() {
-              selectedTime = TimeOfDay(hour: value, minute: selectedTime!.minute);
-            });
-          },
+        SizedBox(
+          width: 60,
+          child: TextField(
+            controller: _hourController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: "Hour",
+              labelStyle: TextStyle(fontSize: 14),
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              border: UnderlineInputBorder(),
+            ),
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 18),
+          ),
         ),
-        Text(":"),
-        NumberPicker(
-          value: selectedTime!.minute,
-          minValue: 0,
-          maxValue: 59,
-          onChanged: (value) {
-            setState(() {
-              selectedTime = TimeOfDay(hour: selectedTime!.hour, minute: value);
-            });
-          },
+        Text(
+          ":",
+          style: TextStyle(fontSize: 18),
+        ),
+        SizedBox(
+          width: 60,
+          child: TextField(
+            controller: _minuteController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: "Min",
+              labelStyle: TextStyle(fontSize: 14),
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              border: UnderlineInputBorder(),
+            ),
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 18),
+          ),
         ),
       ],
     );
   }
+
+
+
 
   void _selectNow() {
     setState(() {
       _selectedToDateTime = "now";
     });
 
-    // Tự động áp dụng URL với thời gian "to" là "now" và từ "from" đã chọn
     _applyTimeRange();
   }
 
@@ -255,19 +261,17 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
         ? _selectedToDateTime
         : "";
 
-    // Kiểm tra nếu fromTime và toTime không được chọn
     String newUrl;
     if (fromTime.isEmpty || toTime.isEmpty) {
-      newUrl = _baseUrl; // Sử dụng baseUrl nếu time range chưa được chọn
+      newUrl = _baseUrl;
     } else {
-      newUrl = '$_baseUrl&from=$fromTime&to=$toTime'; // Sử dụng URL có time range
+      newUrl = '$_baseUrl&from=$fromTime&to=$toTime';
     }
 
-    // Tạo nội dung HTML với iframe
     String iframeHtml = '''
     <html>
       <body style="margin:0;padding:0;">
-        <iframe src="$newUrl" style="border:none;" width="100%" height="50%"></iframe>
+        <iframe src="$newUrl" style="border:none;" width="100%" height="100%"></iframe>
       </body>
     </html>
   ''';
@@ -279,13 +283,38 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('device 1'),
+        title: Row(
+          children: [
+            IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            Text('device 1'),
+          ],
+        ),
       ),
       body: OrientationBuilder(
         builder: (context, orientation) {
           return Column(
             children: <Widget>[
               if (orientation == Orientation.portrait) ...[
+                SizedBox(height: 16.0),
+                Center(
+                  child: Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: Image.asset(
+                      'assets/logo.png',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16.0),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -345,28 +374,19 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
                 ),
               ],
               Expanded(
-                child: Container(
-                  width: orientation == Orientation.portrait
-                      ? MediaQuery.of(context).size.width * 0.95
-                      : MediaQuery.of(context).size.width,
-                  height: orientation == Orientation.portrait
-                      ? MediaQuery.of(context).size.height * 0.5
-                      : MediaQuery.of(context).size.height,
-                  child: WebView(
-                    javascriptMode: JavascriptMode.unrestricted,
-                    onWebViewCreated: (WebViewController webViewController) {
-                      _webViewController = webViewController;
+                child: WebView(
+                  javascriptMode: JavascriptMode.unrestricted,
+                  onWebViewCreated: (WebViewController webViewController) {
+                    _webViewController = webViewController;
 
-                      // Tải nội dung ngay khi WebView được khởi tạo
-                      _webViewController.loadUrl(Uri.dataFromString('''
-                      <html>
-                        <body style="margin:0;padding:0;">
-                          <iframe src="$_baseUrl" style="border:none;" width="100%" height="100%"></iframe>
-                        </body>
-                      </html>
+                    _webViewController.loadUrl(Uri.dataFromString('''
+                    <html>
+                      <body style="margin:0;padding:0;">
+                        <iframe src="$_baseUrl" style="border:none;" width="100%" height="100%"></iframe>
+                      </body>
+                    </html>
                     ''', mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString());
-                    },
-                  ),
+                  },
                 ),
               ),
             ],
