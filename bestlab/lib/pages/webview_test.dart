@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -114,7 +116,17 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
         : _defaultToDateTime;
 
     String newUrl = '$_baseUrl&from=$fromTime&to=$toTime';
-    _webViewController.loadUrl(newUrl);
+
+    // Tạo nội dung HTML với iframe
+    String iframeHtml = '''
+      <html>
+        <body style="margin:0;padding:0;">
+          <iframe src="$newUrl" style="border:none;" width="100%" height="50%"></iframe>
+        </body>
+      </html>
+    ''';
+
+    _webViewController.loadUrl(Uri.dataFromString(iframeHtml, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString());
   }
 
   @override
@@ -185,7 +197,6 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
               width: MediaQuery.of(context).size.width * 0.95,
               height: MediaQuery.of(context).size.height * 0.5,
               child: WebView(
-                initialUrl: _baseUrl,
                 javascriptMode: JavascriptMode.unrestricted,
                 onWebViewCreated: (WebViewController webViewController) {
                   _webViewController = webViewController;
