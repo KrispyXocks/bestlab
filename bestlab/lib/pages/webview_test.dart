@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -10,6 +12,16 @@ class DateTimeRangePickerExample extends StatefulWidget {
 class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample> {
   String _selectedFromDateTime = "Select From Date & Time";
   String _selectedToDateTime = "Select To Date & Time";
+
+  // Nội dung HTML chứa iframe
+  String iframeHtml = '''
+    <html>
+      <body>
+        <iframe src="http://10.0.2.2:3000/d-solo/TXSTREZ/simple-streaming-example?orgId=1&from=1724285478364&to=1724285778364&panelId=5" 
+                width="100%" height="50%" frameborder="0"></iframe>
+      </body>
+    </html>
+  ''';
 
   Future<void> _selectFromDateTime(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -150,7 +162,11 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
               width: MediaQuery.of(context).size.width * 0.95,
               height: MediaQuery.of(context).size.height * 0.5,
               child: WebView(
-                initialUrl: 'https://flutter.dev', // Thay đổi URL này theo nhu cầu
+                initialUrl: Uri.dataFromString(
+                  iframeHtml,
+                  mimeType: 'text/html',
+                  encoding: Encoding.getByName('utf-8'),
+                ).toString(),
                 javascriptMode: JavascriptMode.unrestricted,
               ),
             ),
@@ -159,4 +175,10 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
       ),
     );
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: DateTimeRangePickerExample(),
+  ));
 }
