@@ -13,7 +13,7 @@ class DateTimeRangePickerExample extends StatefulWidget {
 class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample> {
   String _selectedFromDateTime = "Select From Date & Time";
   String _selectedToDateTime = "Select To Date & Time";
-  String _baseUrl = "http://localhost:3000/d-solo/TXSTREZ/simple-streaming-example?orgId=1&panelId=5";
+  String _baseUrl = "http://10.0.2.2:3000/d-solo/TXSTREZ/simple-streaming-example?orgId=1&panelId=5";
   late WebViewController _webViewController;
 
   final String _defaultFromDateTime = "2024-01-01T00:00:00Z"; // Giá trị mặc định cho "from"
@@ -231,24 +231,31 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
   void _applyTimeRange() {
     String fromTime = _selectedFromDateTime != "Select From Date & Time"
         ? _selectedFromDateTime
-        : _defaultFromDateTime;
+        : "";
     String toTime = _selectedToDateTime != "Select To Date & Time"
         ? _selectedToDateTime
-        : _defaultToDateTime;
+        : "";
 
-    String newUrl = '$_baseUrl&from=$fromTime&to=$toTime';
+    // Kiểm tra nếu fromTime và toTime không được chọn
+    String newUrl;
+    if (fromTime.isEmpty || toTime.isEmpty) {
+      newUrl = _baseUrl; // Sử dụng baseUrl nếu time range chưa được chọn
+    } else {
+      newUrl = '$_baseUrl&from=$fromTime&to=$toTime'; // Sử dụng URL có time range
+    }
 
     // Tạo nội dung HTML với iframe
     String iframeHtml = '''
-      <html>
-        <body style="margin:0;padding:0;">
-          <iframe src="$newUrl" style="border:none;" width="100%" height="50%"></iframe>
-        </body>
-      </html>
-    ''';
+    <html>
+      <body style="margin:0;padding:0;">
+        <iframe src="$newUrl" style="border:none;" width="100%" height="50%"></iframe>
+      </body>
+    </html>
+  ''';
 
     _webViewController.loadUrl(Uri.dataFromString(iframeHtml, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString());
   }
+
 
   @override
   Widget build(BuildContext context) {
