@@ -46,39 +46,6 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
     }
   }
 
-  Future<void> _selectToDateTime(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-
-    if (pickedDate != null) {
-      final TimeOfDay? pickedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.fromDateTime(DateTime.now()),
-      );
-
-      if (pickedTime != null) {
-        final DateTime fullDateTime = DateTime(
-          pickedDate.year,
-          pickedDate.month,
-          pickedDate.day,
-          pickedTime.hour,
-          pickedTime.minute,
-        );
-
-        String formattedDate = DateFormat("yyyy-MM-ddTHH:mm:ss").format(fullDateTime);
-        formattedDate = "${formattedDate}Z";
-
-        setState(() {
-          _selectedToDateTime = formattedDate;
-        });
-      }
-    }
-  }
-
   void _selectNow() {
     final DateTime now = DateTime.now();
     String formattedDate = DateFormat("yyyy-MM-ddTHH:mm:ss").format(now);
@@ -87,19 +54,17 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
     setState(() {
       _selectedToDateTime = formattedDate;
     });
-  }
 
-  void _applyTimeRange() {
-    if (_selectedFromDateTime != "Select From Date & Time" &&
-        _selectedToDateTime != "Select To Date & Time") {
+    // Tự động áp dụng URL với thời gian "to" là now và từ "from" đã chọn
+    if (_selectedFromDateTime != "Select From Date & Time") {
       String newUrl = '$_baseUrl&from=$_selectedFromDateTime&to=$_selectedToDateTime';
       _webViewController.loadUrl(newUrl);
     } else {
-      // Hiển thị một cảnh báo nếu người dùng chưa chọn đầy đủ from/to
+      // Hiển thị cảnh báo nếu người dùng chưa chọn thời gian "from"
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          content: Text("Please select both From and To time ranges."),
+          content: Text("Please select a From time range before applying Now."),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -152,10 +117,6 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
                     ),
                     SizedBox(width: 10),
                     IconButton(
-                      icon: Icon(Icons.edit),
-                      onPressed: () => _selectToDateTime(context),
-                    ),
-                    IconButton(
                       icon: Icon(Icons.access_time),
                       onPressed: _selectNow,
                     ),
@@ -168,10 +129,6 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
                 ),
               ],
             ),
-          ),
-          ElevatedButton(
-            onPressed: _applyTimeRange,
-            child: Text('Apply'),
           ),
           Expanded(
             child: Container(
