@@ -142,7 +142,6 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
             child: Column(
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
                       'From:',
@@ -153,16 +152,17 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
                       icon: Icon(Icons.edit),
                       onPressed: () => _selectFromDateTime(context),
                     ),
-                    SizedBox(width: 10),
-                    Text(
-                      _selectedFromDateTime,
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    Expanded(
+                      child: Text(
+                        _selectedFromDateTime,
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.left,
+                      ),
                     ),
                   ],
                 ),
                 SizedBox(height: 20),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
                       'To:',
@@ -177,10 +177,12 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
                       icon: Icon(Icons.access_time),
                       onPressed: _selectNow,
                     ),
-                    SizedBox(width: 10),
-                    Text(
-                      _selectedToDateTime,
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    Expanded(
+                      child: Text(
+                        _selectedToDateTime,
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.left,
+                      ),
                     ),
                   ],
                 ),
