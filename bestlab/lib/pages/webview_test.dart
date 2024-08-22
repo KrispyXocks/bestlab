@@ -23,7 +23,6 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
   TimeOfDay? selectedTime = TimeOfDay.now();
 
   @override
-  @override
   void initState() {
     super.initState();
 
@@ -282,89 +281,97 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
       appBar: AppBar(
         title: Text('device 1'),
       ),
-      body: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                Row(
-                  children: <Widget>[
-                    Text(
-                      'From:',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    SizedBox(width: 10),
-                    IconButton(
-                      icon: Icon(Icons.edit),
-                      onPressed: () => _selectFromDateTime(context),
-                    ),
-                    Expanded(
-                      child: Text(
-                        _selectedFromDateTime,
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.left,
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          return Column(
+            children: <Widget>[
+              if (orientation == Orientation.portrait) ...[
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            'From:',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          SizedBox(width: 10),
+                          IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () => _selectFromDateTime(context),
+                          ),
+                          Expanded(
+                            child: Text(
+                              _selectedFromDateTime,
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      'To:',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    SizedBox(width: 10),
-                    IconButton(
-                      icon: Icon(Icons.edit),
-                      onPressed: () => _selectToDateTime(context),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.access_time),
-                      onPressed: _selectNow,
-                    ),
-                    Expanded(
-                      child: Text(
-                        _selectedToDateTime,
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.left,
+                      SizedBox(height: 20),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            'To:',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          SizedBox(width: 10),
+                          IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () => _selectToDateTime(context),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.access_time),
+                            onPressed: _selectNow,
+                          ),
+                          Expanded(
+                            child: Text(
+                              _selectedToDateTime,
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _applyTimeRange,
-                  child: Text('Apply Time Range'),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: _applyTimeRange,
+                        child: Text('Apply Time Range'),
+                      ),
+                    ],
+                  ),
                 ),
               ],
-            ),
-          ),
-          Expanded(
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.95,
-              height: MediaQuery.of(context).size.height * 0.5,
-              child: WebView(
-                javascriptMode: JavascriptMode.unrestricted,
-                onWebViewCreated: (WebViewController webViewController) {
-                  _webViewController = webViewController;
+              Expanded(
+                child: Container(
+                  width: orientation == Orientation.portrait
+                      ? MediaQuery.of(context).size.width * 0.95
+                      : MediaQuery.of(context).size.width,
+                  height: orientation == Orientation.portrait
+                      ? MediaQuery.of(context).size.height * 0.5
+                      : MediaQuery.of(context).size.height,
+                  child: WebView(
+                    javascriptMode: JavascriptMode.unrestricted,
+                    onWebViewCreated: (WebViewController webViewController) {
+                      _webViewController = webViewController;
 
-                  // Tải nội dung ngay khi WebView được khởi tạo
-                  _webViewController.loadUrl(Uri.dataFromString('''
-                  <html>
-                    <body style="margin:0;padding:0;">
-                      <iframe src="$_baseUrl" style="border:none;" width="100%" height="50%"></iframe>
-                    </body>
-                  </html>
-  ''', mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString());
-    },
-
-
+                      // Tải nội dung ngay khi WebView được khởi tạo
+                      _webViewController.loadUrl(Uri.dataFromString('''
+                      <html>
+                        <body style="margin:0;padding:0;">
+                          <iframe src="$_baseUrl" style="border:none;" width="100%" height="100%"></iframe>
+                        </body>
+                      </html>
+                    ''', mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString());
+                    },
+                  ),
+                ),
               ),
-            ),
-          ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }
