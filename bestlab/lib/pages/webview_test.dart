@@ -13,6 +13,9 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
   String _baseUrl = "http://10.0.2.2:3000/d-solo/TXSTREZ/simple-streaming-example?orgId=1&panelId=5";
   late WebViewController _webViewController;
 
+  final String _defaultFromDateTime = "2024-01-01T00:00:00Z"; // Giá trị mặc định cho "from"
+  final String _defaultToDateTime = "now"; // Giá trị mặc định cho "to"
+
   Future<void> _selectFromDateTime(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -25,6 +28,13 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
       final TimeOfDay? pickedTime = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.fromDateTime(DateTime.now()),
+        builder: (context, child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+            child: child!,
+          );
+        },
+        initialEntryMode: TimePickerEntryMode.input, // Đặt chế độ nhập text
       );
 
       if (pickedTime != null) {
@@ -58,6 +68,13 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
       final TimeOfDay? pickedTime = await showTimePicker(
         context: context,
         initialTime: TimeOfDay.fromDateTime(DateTime.now()),
+        builder: (context, child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+            child: child!,
+          );
+        },
+        initialEntryMode: TimePickerEntryMode.input, // Đặt chế độ nhập text
       );
 
       if (pickedTime != null) {
@@ -85,46 +102,19 @@ class _DateTimeRangePickerExampleState extends State<DateTimeRangePickerExample>
     });
 
     // Tự động áp dụng URL với thời gian "to" là "now" và từ "from" đã chọn
-    if (_selectedFromDateTime != "Select From Date & Time") {
-      String newUrl = '$_baseUrl&from=$_selectedFromDateTime&to=$_selectedToDateTime';
-      _webViewController.loadUrl(newUrl);
-    } else {
-      // Hiển thị cảnh báo nếu người dùng chưa chọn thời gian "from"
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          content: Text("Please select a From time range before applying Now."),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text("OK"),
-            ),
-          ],
-        ),
-      );
-    }
+    _applyTimeRange();
   }
 
   void _applyTimeRange() {
-    if (_selectedFromDateTime != "Select From Date & Time" &&
-        _selectedToDateTime != "Select To Date & Time") {
-      String newUrl = '$_baseUrl&from=$_selectedFromDateTime&to=$_selectedToDateTime';
-      _webViewController.loadUrl(newUrl);
-    } else {
-      // Hiển thị một cảnh báo nếu người dùng chưa chọn đầy đủ from/to
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          content: Text("Please select both From and To time ranges."),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text("OK"),
-            ),
-          ],
-        ),
-      );
-    }
+    String fromTime = _selectedFromDateTime != "Select From Date & Time"
+        ? _selectedFromDateTime
+        : _defaultFromDateTime;
+    String toTime = _selectedToDateTime != "Select To Date & Time"
+        ? _selectedToDateTime
+        : _defaultToDateTime;
+
+    String newUrl = '$_baseUrl&from=$fromTime&to=$toTime';
+    _webViewController.loadUrl(newUrl);
   }
 
   @override
